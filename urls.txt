@@ -1,0 +1,4 @@
+tibero6-bin-FS07_CS_1912-linux64-174424-opt.tar.gz : https://docs.google.com/uc?export=download&id=1PdRlSnuH2-e3THVQ2G7_NtiWHrN3B46w
+
+license_dummy_APR2021.xml : 
+https://docs.google.com/uc?export=download&id=1PdRlSnuH2-e3THVQ2G7_NtiWHrN3B46w
