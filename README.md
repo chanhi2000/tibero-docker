@@ -14,18 +14,56 @@ You can configure encrypted communication if you wish, follow Admin Guide, Chapt
 Encrypted tablespaces, partitioning (interval is not documented), composite partitioning.
 Many very complex features are available.
 
-### Description
+## Getting the image
 
-Tibero Database is a RDBMS database that has a worldwide growing position as well in Europe. In Asia and especially in South Korea where it has a dominant market share. It has been promoted by the South Korean Government to get a safer data engine against cyberattacks and to be technology independent.
+### Use the docker repository
 
-Tibero was built for compatibility with Oracle Database and IBM DB2 Database at the same time. PSM is a built-in language that shares package names with PL/SQL.
+> __NOTE__: image currently not available at Docker Hub
 
-Oracle DBAs and DB Developers find Tibero interesting because it shares administration concepts and enable developers to port their code without changes in 97% of the cases. Companies that adopt Tibero pursue to keep 1 code branch that works in 2 different engines at the same time, Oracle and Tibero.
+```sh
+docker pull chanhi2000/tibero6
+```
 
-Tibero simplifies the terms of licensing and it is often used as a Cloud Strategy because of the wide number of features available with different cloud providers and the added-value it brings to the applications.
+### Run the container
 
-Tibero Database is a proven RDBMS that stands versus Oracle Database or Exadata in terms of performance, scalability, flexibility and security at competitive cost versus Open-Source commercial Ecosystem vendors. 
+```sh
+docker run -it -h dummy -p 8629:8629 chanhi2000/tibero6:latest
+```
 
+## Quick set-up
+
+> __NOTE__: image currently not available at Docker Hub
+
+`docker-compose` file (with description):
+
+Use this docker-compose file to get up and running quickly
+
+```yml
+version: "3"
+
+services:
+  db:
+    image: chanhi2000/tibero6:latest
+    container_name: db
+    hostname: dummy 
+    # hostname: <HOSTNMAE_YOU_LIKE>
+    stdin_open: true 
+    environment:
+      - TB_MAX_SESSION_COUNT=100
+      - TB_MEMORY_TARGET=4G
+      - TB_TOTAL_SHM_SIZE=2G
+    volumes:
+      - ./tibero/database:/home/tibero/tibero6/database
+      - ../db:/docker-entrypoint-initdb.d/
+      - ./tibero/license:/opt/tibero/license:rw
+      - ./tibero/dump:/opt/tibero/dump
+    ports:
+      - "8629:8629"
+```
+
+> __NOTE__:  You must define `hostname` of the container, because Tibero Database checks and validate hostname value and determines whether to launch or not.
+
+## References
 
 ### Tibero Documentation
 
@@ -51,14 +89,14 @@ It lasts for 6 months for each hostname required. You can require the same hostn
 
 The license inside the container is not meant for distribution, sale or resale. All rights are reserved to Dimensigon.
 
-## For Support
+### For Support
 
 This machine is for testing only. Community Support is at [support.tmaxsoft.com](https://support.tmaxsoft.com).
 
 Feel free to reach us at [Dimensigon](https://www.dimensigon.com) for any questions.
 
 
-#### DISCLAIMER
+### DISCLAIMER
 
 Copyright (c) 2018-, KnowTrade and its affiliates, All rights reserved.
 
