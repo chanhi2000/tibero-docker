@@ -52,7 +52,7 @@ services:
       - TB_MAX_SESSION_COUNT=100
       - TB_MEMORY_TARGET=4G
       - TB_TOTAL_SHM_SIZE=2G
-      # specify all below for triggering tbimport from /opt/tibero/dump
+      # specify all below for triggering tbimport from '/opt/tibero/dump'
       - TB_IMPORT_ENABLE=true # default `false`
       - TB_IMPORT_SID=<target DB SID>
       - TB_IMPORT_PORT=<target DB port>
@@ -69,8 +69,8 @@ services:
       - TB_IMPORT_USER=<source DB user>
     volumes:
       - ./tibero/database:/home/tibero/tibero6/database
-      - ../db:/docker-entrypoint-initdb.d/
-      - ./tibero/license:/opt/tibero/license:rw
+      - ./tibero/init/:/opt/tibero/init
+      - ./tibero/license:/opt/tibero/license
       - ./tibero/dump:/opt/tibero/dump
     ports:
       - "8629:8629"
