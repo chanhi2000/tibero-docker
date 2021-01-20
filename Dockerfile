@@ -79,8 +79,8 @@ COPY bash_profile_tibero /home/tibero/.bash_profile
 
 
 RUN chown tibero:dba /home/tibero/tibero6/license/license.xml  \
- 	&& mkdir /docker-entrypoint-initdb.d \
  	&& mkdir /opt/tibero/ \
+ 	&& mkdir /opt/tibero/init \
  	&& mkdir /opt/tibero/dump \
  	&& mkdir /opt/tibero/license 
 

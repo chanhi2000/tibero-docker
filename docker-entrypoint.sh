@@ -87,19 +87,33 @@ if [ "$(ls -A $TB_HOME/database)" ]; then
 else 
 	echo '[Entrypoint] Initializing database with TB_HOME/bin/tb_create_db.sh (for the first time)'
 	$TB_HOME/bin/tb_create_db.sh
+
+	TB_INIT_LOC=/opt/tibero/init
+	if [ "$(ls -A $TB_INIT_LOC)" ]; then
+		echo "[Entrypoint] init script(s) detected! Execute Now as DBA ... "
+		for f in $TB_INIT_LOC/*; do
+			EXT=${f##*\.)}
+			case "$EXT" in
+				*sql) echo "[Entrypoint] <INFO> execute script '$f' ... "; tbsql sys/tibero @$f ;;
+				*)   echo "[Entrypoint] <INFO> ignoring $f" ;;
+			esac
+			echo
+		done
+	fi
 fi
 
 # POSTBOOT: execute tbimport if any
 if [ "$(ls -A /opt/tibero/dump)" ]; then
-	echo "[Entrypoint] Dump file found! tbimport has started ... "
+	echo "[Entrypoint] Dump file detected! tbimport has started ... "
 	for f in /opt/tibero/dump/*; do
 		case "$f" in
-			# *.dat)  echo "[Entrypoint] importing $f"; tbimport "$f" ;;
-			*)     echo "[Entrypoint] ignoring $f"; # ;
+			#*dat)  echo "[Entrypoint] importing $f"; tbimport port=8629 data=$f ;;
+			*)     echo "[Entrypoint] <INFO> ignoring $f"; ;;
 		esac
 		echo
 	done
 fi
+
 
 echo ''
 echo '[Entrypoint] Tibero SQL init process done. Ready for start up.'
