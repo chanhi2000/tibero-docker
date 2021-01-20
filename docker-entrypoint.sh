@@ -92,9 +92,12 @@ else
 	if [ "$(ls -A $TB_INIT_LOC)" ]; then
 		echo "[Entrypoint] init script(s) detected! Execute Now as DBA ... "
 		for f in $TB_INIT_LOC/*; do
-			EXT=${f##*\.)}
-			case "$EXT" in
-				*sql) echo "[Entrypoint] <INFO> execute script '$f' ... "; tbsql sys/tibero @$f ;;
+			case "$f" in
+				*sql) echo "[Entrypoint] <INFO> execute script '$f' ... "; tbsql sys/tibero << EOF
+@$f;
+exit;
+EOF
+;;
 				*)   echo "[Entrypoint] <INFO> ignoring $f" ;;
 			esac
 			echo
@@ -104,14 +107,19 @@ fi
 
 # POSTBOOT: execute tbimport if any
 if [ "$(ls -A /opt/tibero/dump)" ]; then
-	echo "[Entrypoint] Dump file detected! tbimport has started ... "
-	for f in /opt/tibero/dump/*; do
-		case "$f" in
-			#*dat)  echo "[Entrypoint] importing $f"; tbimport port=8629 data=$f ;;
-			*)     echo "[Entrypoint] <INFO> ignoring $f"; ;;
-		esac
-		echo
-	done
+	if [ ! -z "$TB_IMPORT_ENABLE" -a "$TB_IMPORT_ENABLE" == true ]; then 
+		echo "[Entrypoint] Dump file detected! tbimport has started ... "
+		echo "[Entrypoint] <INFO> Target DB full url : jdbc:tibero:thin:$TB_IMPORT_USERNAME/$TB_IMPORT_PASSWORD@localhost:$TB_IMPORT_PORT:$TB_IMPORT_SID ... "
+		echo "[Entrypoint] <INFO> to user : $TB_IMPORT_USER ... "
+		echo "[Entrypoint] <INFO> What to import : ... "
+		for f in /opt/tibero/dump/*; do
+			case "$f" in
+				*dat)  echo "[Entrypoint] tbimport file: $f"; tbimport port=$TB_IMPORT_PORT sid=$TB_IMPORT_SID username=$TB_IMPORT_USERNAME password=$TB_IMPORT_PASSWORD file=$f script=$TB_IMPORT_SCRIPT ignore=$TB_IMPORT_IGNORE rows=$TB_IMPORT_ROWS constraint=$TB_IMPORT_CONSTRAINT index=$TB_IMPORT_INDEX trigger=$TB_IMPORT_TRIGGER synonym=$TB_IMPORT_SYNONYM sequence=$TB_IMPORT_SEQUENCE user=$TB_IMPORT_USER;;
+				*)     echo "[Entrypoint] <INFO> ignoring $f"; ;;
+			esac
+			echo
+		done
+	fi 
 fi
 
 

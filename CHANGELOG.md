@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [0.0.4] - 2020-01-20
+
+- Modify `Dockerfile` to add More Environment Variables for `tbimport` feature
+- Add explanation on these variables
+- 
+
+## [0.0.3] - 2020-01-20
+
+- Modify `Dockerfile` so it can detect and execute user-defined initialization script (located in `/opt/tibero/init`)
+- Add detailed documentation on how to launch container
+
+## [0.0.2] - 2020-01-20
+
+- Modify `docker-entrypoint.sh` script for hostname string comparison
+    - make it case insensitive
+
 ## [0.0.1] - 2020-01-19
 
 - Forked from [@dimensigon](https://github.com/dimensigon)
