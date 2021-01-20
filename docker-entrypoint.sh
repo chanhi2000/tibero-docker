@@ -42,9 +42,10 @@ if [ $(hostname) != 'dummy' ]; then
 		TB_NEW_LICENSE_PATH=/opt/tibero/license
 		echo "[Entrypoint] New license found in $TB_NEW_LICENSE_PATH! Examining license status ..."  	
 		TB_HOSTNAME_TMP=$(cat $TB_NEW_LICENSE_PATH/license.xml | grep -oP '(?<=<licensee>).*?(?=</licensee>)')
+		TB_HOSTNAME_TMP=$(echo $TB_HOSTNAME_TMP | awk '{print tolower($0)}') # to lowercase
 		echo "[Entrypoint] <INFO> license.xml - hostname recorded : $TB_HOSTNAME_TMP" 
 		
-		if [ $(hostname) != $TB_HOSTNAME_TMP ]; then
+		if [ $(hostname | awk '{print tolower($0)}') != $TB_HOSTNAME_TMP ]; then
 			echo "[Entrypoint] <ERROR:301> invalid hostname: hostname mismatch."
 			echo ""
 			echo "[Entrypoint] <TIP> Do either of the followings."
